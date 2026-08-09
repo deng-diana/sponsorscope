@@ -1,22 +1,17 @@
-import { readFileSync } from "fs";
-import { gunzipSync } from "zlib";
 import Link from "next/link";
+import { getCompanies, searchCompanies } from "@/lib/sponsors";
+import { CompanyCard } from "@/components/CompanyCard";
 
 export default async function Home({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  const params = await searchParams;
-  const query = params.q ?? "";
+  const { q } = await searchParams;
+  const query = q ?? "";
 
-  const file = readFileSync("data/snapshot-latest.txt.gz");
-  const text = gunzipSync(file).toString();
-  const lines = text.trim().split("\n");
-
-  const matches = query
-    ? lines.filter((line) => line.toLowerCase().includes(query.toLowerCase()))
-    : [];
+  const result = await searchCompanies(query);
+  const companies = await getCompanies();
 
   return (
     <main className="mx-auto max-w-2xl p-10">
@@ -37,20 +32,24 @@ export default async function Home({
           </Link>
         )}
       </form>
-      <p className="mt-4"> You searched for : {query}</p>
-      {matches.length > 0 ? (
-        <ul className="mt-2">
-          {matches.slice(0, 20).map((match) => (
-            <li key={match}>{match}</li>
-          ))}
-        </ul>
-      ) : (
-        "nothing exist"
+
+      {query && result.length === 0 && (
+        <p className="mt-4 text-center text-gray-400">
+          No company matches that name.
+        </p>
       )}
 
-      <p className="mt-2 text-gray-600 text-center">
-        {lines.length} companies on the register
-      </p>
+      {query && (
+        <p className="mt-6 text-gray-500">
+          {result.length} {result.length === 1 ? "result" : "results"} for
+          &quot;{query}&quot;
+        </p>
+      )}
+      <ul className="mt-2 space-y-3">
+        {result.map((company) => (
+          <CompanyCard key={CompanyCard.name} company={company} />
+        ))}
+      </ul>
     </main>
   );
 }
