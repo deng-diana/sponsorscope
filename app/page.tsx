@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { getCompanies, searchCompanies } from "@/lib/sponsors";
+import { getCompanyCount, searchCompanies } from "@/lib/sponsors";
 import { CompanyCard } from "@/components/CompanyCard";
 import { SearchIcon, CloseIcon } from "@/components/icons";
+import { Input } from "@/components/ui/input";
 
 export default async function Home({
   searchParams,
@@ -12,6 +13,7 @@ export default async function Home({
   const query = q ?? "";
 
   const result = await searchCompanies(query);
+  const total = await getCompanyCount();
 
   return (
     <main className="mx-auto max-w-2xl p-10">
@@ -19,19 +21,19 @@ export default async function Home({
         SponsorScope
       </h1>
       <form className="relative mt-6">
-        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 
-        <input
+        <Input
           name="q"
           defaultValue={query}
           placeholder="Search a company"
-          className="w-full rounded border border-gray-300 pl-8 pr-8 py-2"
+          className="pl-10 pr-10 py-4 rounded-md"
         />
         {query && (
           <Link
             href="/"
             aria-label="Clear search"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-gray-600"
           >
             <CloseIcon className="w-4 h-4" />
           </Link>
@@ -39,22 +41,25 @@ export default async function Home({
       </form>
 
       {query && result.length === 0 && (
-        <p className="mt-4 text-center text-gray-400">
+        <p className="mt-4 text-center text-muted-foreground">
           No company matches that name.
         </p>
       )}
 
       {query && (
-        <p className="mt-6 text-gray-500">
+        <p className="mt-6 text-muted-foreground">
           {result.length} {result.length === 1 ? "result" : "results"} for
           &quot;{query}&quot;
         </p>
       )}
       <ul className="mt-2 space-y-3">
         {result.map((company) => (
-          <CompanyCard key={CompanyCard.name} company={company} />
+          <CompanyCard key={company.name} company={company} />
         ))}
       </ul>
+      <p className="mt-8 text-center text-muted-foreground">
+        {total} companies on the register
+      </p>
     </main>
   );
 }

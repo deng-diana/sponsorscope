@@ -1,31 +1,39 @@
 import { canSponsorSkilledWorker } from "@/lib/sponsors";
 import type { Company } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export function CompanyCard({ company }: { company: Company }) {
   const canSponsor = canSponsorSkilledWorker(company);
   const isBRated = company.rating.includes("B rating");
   return (
-    <li className="rounded-lg border border-gray-200 p-4">
+    <li className="rounded-lg border p-4">
       <div className="flex items-start justify-between gap-6 ">
         <div>
           <p className="font-medium">{company.name}</p>
-          <p className="text-sm text-gray-500">{company.town}</p>
+          <p className="text-sm text-muted-foreground">{company.town}</p>
         </div>
 
-        <span
-          className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium
-                ${canSponsor ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}
+        <Badge
+          className={cn(
+            "shrink-0 py-3 px-2",
+            canSponsor
+              ? "bg-eligible text-eligible-foreground"
+              : "bg-warning text-warning-foreground",
+          )}
         >
           {canSponsor ? "Skilled Worker" : "No Skilled Worker"}
-        </span>
+        </Badge>
       </div>
 
       {isBRated && (
-        <p className="mt-2 text-xs text-red-600">
+        <p className="mt-2 text-xs text-destructive">
           B rating: this sponsor is on a Home Office action plan.
         </p>
       )}
-      <p className="mt-2 text-sm text-gray-400">{company.routes.join(", ")} </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {company.routes.join(", ")}{" "}
+      </p>
     </li>
   );
 }
