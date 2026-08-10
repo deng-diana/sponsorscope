@@ -1,32 +1,12 @@
-import { readFileSync } from "fs";
-import { join } from "path";
-import { gunzipSync } from "zlib";
 import { SKILLED_WORKER, type Company } from "./types";
+import { supabase } from "./supabase";
 
-const DATA_PATH = join(process.cwd(), "data", "snapshot-latest.txt.gz");
-let cache: Company[] | null = null;
-
-function loadCompanies(): Company[] {
-  const text = gunzipSync(readFileSync(DATA_PATH)).toString();
-  const byName = new Map<string, Company>();
-
-  for (const line of text.trim().split("\n")) {
-    const [name, town, , rating, route] = line.split("\t");
-    const found = byName.get(name);
-    if (found) {
-      found.routes.push(route);
-    } else {
-      byName.set(name, { name, town, rating, routes: [route] });
-    }
-  }
-  return [...byName.values()];
-}
-
-export async function getCompanies(): Promise<Company[]> {
-  if (!cache) {
-    cache = loadCompanies();
-  }
-  return cache;
+export async function getCompanyCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from("companies")
+    .select("*", { count: "exact", head: true });
+  if (error) throw error;
+  return count ?? 0;
 }
 
 export async function searchCompanies(
@@ -34,11 +14,14 @@ export async function searchCompanies(
   limit = 20,
 ): Promise<Company[]> {
   if (!query) return [];
-  const needle = query.toLowerCase();
-  const companies = await getCompanies();
-  return companies
-    .filter((company) => company.name.toLowerCase().includes(needle))
-    .slice(0, limit);
+  const { data, error } = await supabase
+    .from("companies")
+    .select("name, town, rating, routes")
+    .ilike("name", `%${query}%`)
+    .limit(limit);
+
+  if (error) throw error;
+  return data ?? [];
 }
 
 export function canSponsorSkilledWorker(company: Company): boolean {
