@@ -112,9 +112,11 @@ Working today:
 Next, in order:
 
 - [ ] **Brand to legal entity resolution.** The register lists `Roofoods Ltd`,
-      the job advert says `Deliveroo`. Planned as normalisation plus trigram
-      fuzzy match, returning a confidence level and the matched row rather than
-      a bare yes, so a wrong match is visible instead of silent.
+      the job advert says `Deliveroo`. Searching `revolut` today returns
+      `Heaven Revolution CIC` and never reaches `Revolut Ltd`; searching
+      `twitter` returns nothing at all. Those are two different bugs, and
+      neither is solved by "add fuzzy matching". Design, measured failure
+      cases and a staged plan: [docs/ENTITY-RESOLUTION.md](docs/ENTITY-RESOLUTION.md).
 - [ ] **Ireland.** Ireland has no licence register. It publishes employment
       permits actually granted, which is stronger evidence than a licence: it
       proves the employer both wanted to and succeeded. Different data shape,
