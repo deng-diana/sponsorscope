@@ -1,1 +1,0 @@
-还有就是这个 design system、design token 那一页，我希望你给我高度地总结一下，帮我介绍一下。 比如说，我要做这个 design system，是不是首先要在 layout 的页面把所有需要的什么字体什么都引入到那个页面，然后我们是在 global CSS 里面定义什么，比如说 primitive 的颜色，还有一个就是 语义颜色，叫 semantic token；然后再用这个 theme inline，是这个意思吗？ 因为我觉得现在还是不是很明白，所以希望你帮我把它
