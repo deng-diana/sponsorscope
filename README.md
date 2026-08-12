@@ -4,8 +4,9 @@ Search the UK register of licensed visa sponsors and get a straight answer to
 the only question a job seeker actually has: **can this company sponsor a
 Skilled Worker visa?**
 
-<!-- TODO: add the live URL here once the production deploy is fixed and made public -->
-<!-- TODO: add docs/screenshot.png and uncomment the line below -->
+Live: https://sponsorscope-five.vercel.app
+
+<!-- Screenshot goes here once captured. -->
 <!-- ![SponsorScope search results](docs/screenshot.png) -->
 
 ## Why this exists

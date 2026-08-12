@@ -32,7 +32,9 @@ function groupByCompany(rows) {
     const found = byName.get(name);
 
     if (found) {
-      found.routes.push(route);
+      // One row per (organisation, route, sub-type), so the same route can
+      // appear several times for one company. Keep the list distinct.
+      if (!found.routes.includes(route)) found.routes.push(route);
     } else {
       byName.set(name, {
         name,
@@ -75,6 +77,6 @@ async function upsertCompanies(companies) {
 
 const rows = await fetchRows();
 const companies = groupByCompany(rows);
-console.log(`Parsed ${companies.length}companies`);
+console.log(`Parsed ${companies.length} companies`);
 await upsertCompanies(companies);
 console.log("Synced");

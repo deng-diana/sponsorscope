@@ -18,7 +18,8 @@ for (const line of text.trim().split("\n")) {
   const [name, town, county, rating, route] = line.split("\t");
   const found = byName.get(name);
   if (found) {
-    found.routes.push(route);
+    // Same route can repeat for one company across sub-types; keep it distinct.
+    if (!found.routes.includes(route)) found.routes.push(route);
   } else {
     byName.set(name, { name, town, county, rating, routes: [route] });
   }

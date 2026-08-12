@@ -21,7 +21,12 @@ export async function searchCompanies(
     .limit(limit);
 
   if (error) throw error;
-  return data ?? [];
+  // The register carries one row per (organisation, route, sub-type), so a
+  // company licensed for Skilled Worker under two sub-types arrives with the
+  // route repeated. Collapse it here rather than showing the user
+  // "Skilled Worker, Skilled Worker" on the card.
+  const rows = (data ?? []) as Company[];
+  return rows.map((c) => ({ ...c, routes: [...new Set(c.routes)] }));
 }
 
 export function canSponsorSkilledWorker(company: Company): boolean {
