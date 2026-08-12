@@ -6,8 +6,13 @@ Skilled Worker visa?**
 
 Live: https://sponsorscope-five.vercel.app
 
-<!-- Screenshot goes here once captured. -->
-<!-- ![SponsorScope search results](docs/screenshot.png) -->
+![SponsorScope search results. The first company is on the register but holds
+only a Creative Worker licence, so it is flagged No Skilled Worker.](docs/screenshot.jpg)
+
+The first result above is the whole point. `1 MODEL MANAGEMENT LONDON LIMITED`
+is on the register, so searching the government spreadsheet finds it and you
+conclude they can sponsor you. They cannot: their only licence is Creative
+Worker.
 
 ## Why this exists
 
